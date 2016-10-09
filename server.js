@@ -7,14 +7,29 @@ var url = require('url')
 var config = require('./config')
 
 // parse replacement because we only process the path for the request
-config.replace.replacementUrl = url.parse(config.replace.replacement)
+var replacementUrl = url.parse(config.replace.replacement)
+
+// parse search URL for proxy headers
+var searchUrl = url.parse(config.replace.searchUrl)
 
 http.createServer(function (req, res) {
-  var target = (config.replace.hostUrl || config.replace.searchUrl) + req.url.slice(config.replace.replacementUrl.path.length)
+  var target = (config.hostUrl || config.replace.searchUrl) + req.url.slice(replacementUrl.path.length)
   var options = url.parse(target)
 
   // forward request headers
   options.headers = omit(req.headers, 'host')
+
+  // set proxy headers
+  if (config.setProxyHeaders) {
+    options.headers['x-forwarded-proto'] = searchUrl.protocol
+
+    if (config.useProxyPortHeader) {
+      options.headers['x-forwarded-host'] = searchUrl.hostname
+      options.headers['x-forwarded-port'] = searchUrl.port
+    } else {
+      options.headers['x-forwarded-host'] = searchUrl.host
+    }
+  }
 
   http.request(options, function (result) {
     var mediaType
