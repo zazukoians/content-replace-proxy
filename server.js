@@ -10,7 +10,7 @@ var config = require('./config')
 config.replace.replacementUrl = url.parse(config.replace.replacement)
 
 http.createServer(function (req, res) {
-  var target = config.replace.searchUrl + req.url.slice(config.replace.replacementUrl.path.length)
+  var target = (config.replace.hostUrl || config.replace.searchUrl) + req.url.slice(config.replace.replacementUrl.path.length)
   var options = url.parse(target)
 
   // forward request headers
