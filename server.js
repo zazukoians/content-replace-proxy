@@ -25,7 +25,10 @@ http.createServer(function (req, res) {
 
     if (config.useProxyPortHeader) {
       options.headers['x-forwarded-host'] = searchUrl.hostname
-      options.headers['x-forwarded-port'] = searchUrl.port
+
+      if (searchUrl.port) {
+        options.headers['x-forwarded-port'] = searchUrl.port
+      }
     } else {
       options.headers['x-forwarded-host'] = searchUrl.host
     }
@@ -51,5 +54,8 @@ http.createServer(function (req, res) {
       console.log(target)
       result.pipe(res)
     }
+  }).on('error', function (err) {
+    res.statusCode = 500
+    res.end(err.message)
   }).end()
 }).listen(config.port)
