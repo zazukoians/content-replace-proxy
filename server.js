@@ -37,6 +37,10 @@ http.createServer(function (req, res) {
   http.request(options, function (result) {
     var mediaType
 
+    // forward statusCode and statusMessage
+    res.statusCode = result.statusCode
+    res.statusMessage = result.statusMessage
+
     if (result.headers['content-type']) {
       mediaType = contentType.parse(result.headers['content-type']).type
     }
