@@ -21,7 +21,7 @@ http.createServer(function (req, res) {
 
   // set proxy headers
   if (config.setProxyHeaders) {
-    options.headers['x-forwarded-proto'] = searchUrl.protocol
+    options.headers['x-forwarded-proto'] = searchUrl.protocol.substring(0, searchUrl.protocol.lastIndexOf(":"))
 
     if (config.useProxyPortHeader) {
       options.headers['x-forwarded-host'] = searchUrl.hostname
