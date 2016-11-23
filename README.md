@@ -36,3 +36,9 @@ module.exports = config
 With a `config.js` file in the current working directory you can start it as follows:
 
     docker run --rm -v `pwd`/config.js:/usr/src/app/config.js crproxy
+
+## Per-built version
+
+A pre-built version is available on the Docker Hub Repositories as 
+`zazukoians/content-replace-proxy`. It is recommended to use this image as 
+base image for custom configurations.
