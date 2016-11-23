@@ -1,11 +1,11 @@
 var config = {
   replace: {
-    searchUrl: 'http://localhost:8080/',
-    replacement: 'http://localhost:3000/',
+    searchUrl: 'http://data.admin.ch/',
+    replacement: 'http://{request}/',
     mediaTypes: [undefined, 'application/javascript', 'application/json', 'text/html', 'text/turtle']
   },
   port: 3000,
-  hostUrl: 'http://localhost:8081/',
+  hostUrl: 'http://data.admin.ch/',
   setProxyHeaders: true,
   useProxyPortHeader: true
 }
