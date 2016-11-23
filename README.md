@@ -16,8 +16,8 @@ instances listens to port 8080):
 ```
 var config = {
   replace: {
-    searchUrl: 'https://example.org/',
-    replacement: 'http://localhost:3000/',
+    backendBaseURI: 'https://example.org/',
+    exposedBaseURI: 'http://localhost:3000/',
     mediaTypes: [undefined, 'application/javascript', 'application/json', 'text/html', 'text/turtle']
   },
   port: 3000,
