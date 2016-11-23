@@ -1,7 +1,7 @@
 var config = {
   replace: {
-    searchUrl: 'http://data.admin.ch/',
-    replacement: 'http://{request}/',
+    backendBaseURI: 'http://data.admin.ch/',
+    exposedBaseURI: 'http://{request}/',
     mediaTypes: [undefined, 'application/javascript', 'application/json', 'text/html', 'text/turtle']
   },
   port: 3000,
