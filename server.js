@@ -6,21 +6,21 @@ var url = require('url')
 
 var config = require('./config')
 
-// parse replacement because we only process the path for the request
-var replacementUrl = url.parse(config.replace.replacement)
+//This is to avoid duplication of slash when replacement has trailing slash
+var uriPathOffset = config.replace.replacement.endsWith("/")? 1 : 0;
 
 // parse search URL for proxy headers
 var searchUrl = url.parse(config.replace.searchUrl)
 
 http.createServer(function (req, res) {
-  var target = (config.hostUrl || config.replace.searchUrl) + req.url.slice(replacementUrl.path.length)
+  var target = (config.hostUrl || config.replace.searchUrl) + req.url.slice(uriPathOffset)
   var options = url.parse(target)
 
   // forward request headers
   options.headers = omit(req.headers, 'host')
 
   // set proxy headers
-  if (config.setProxyHeaders) {
+  if (config.setProxyHeaders) { 
     options.headers['x-forwarded-proto'] = searchUrl.protocol.substring(0, searchUrl.protocol.lastIndexOf(":"))
 
     if (config.useProxyPortHeader) {
@@ -53,7 +53,14 @@ http.createServer(function (req, res) {
     // only replace content for the given media types (if configured)
     if (!config.replace.mediaTypes || config.replace.mediaTypes.indexOf(mediaType) !== -1) {
       console.log(target + ' -> replace')
-      result.pipe(replace(config.replace.searchUrl, config.replace.replacement)).pipe(res)
+      var replacement;
+      if (config.replace.replacement.indexOf("{request}")) {
+          replacement = config.replace.replacement.replace("{request}",
+                req.headers.host);
+      } else {
+          replacement = config.replace.replacement;
+      }
+      result.pipe(replace(config.replace.searchUrl, replacement)).pipe(res)
     } else {
       console.log(target)
       result.pipe(res)
